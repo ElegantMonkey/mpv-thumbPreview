@@ -22,17 +22,17 @@ local function generate(timespan, input, size,maxThumbs)
 	local command = {}
 
 	command.args = {
-		"ffmpeg",
-		"-loglevel","quiet",
-		"-ss", "",		
-		"-i", input,
-		"-frames:v","1",
-		"-vf", size,
-		"-vcodec", "rawvideo",
-		"-pix_fmt", "bgra",
-		"-f", "image2",
-		"-threads", "4",
-		"-"
+		"mpv",
+		"--msg-level","all=no",
+		"--ss", "",
+		input,
+		"--frames","1",
+		"--no-audio",
+		"--vf-add", size,
+		"--ovc=rawvideo",
+		"--vf-add=format=bgra",
+		"--of", "image2",
+		"--o=-"
 	}
 
 	for i=0, maxThumbs do
@@ -44,8 +44,8 @@ local function generate(timespan, input, size,maxThumbs)
 		local process = utils.subprocess(command)
 		
 		--Check if process was successful.
-		if process.status ~=0 then
-			mp.msg.warn("ffmpeg failed. Check if ffmpeg is in your path environment variables.")
+		if process.status ~= 0 then
+			mp.msg.warn("mpv subprocess failed.")
 			return
 		end
 		
@@ -84,17 +84,17 @@ local function generateLocal(...)
 	mkcmd.args = {"mkdir", "-p",output}
 	
 	command.args = {
-		"ffmpeg",
-		"-loglevel","quiet",
-		"-ss", "",		
-		"-i", input,
-		"-frames:v","1",
-		"-vf", size,
-		"-vcodec", "rawvideo",
-		"-pix_fmt", "bgra",
-		"-f", "image2",
-		"-threads", "4",
-		"out"
+		"mpv",
+		"--msg-level","all=no",
+		"--ss", "",
+		input,
+		"--frames","1",
+		"--no-audio",
+		"--vf-add", size,
+		"--ovc=rawvideo",
+		"--vf-add=format=bgra",
+		"--of", "image2",
+		"--o", "out"
 	}	
 	
 	if regen == 0 then
@@ -111,13 +111,13 @@ local function generateLocal(...)
 		for i=0, maxThumbs do
 			curtime=(i*timespan)
 			command.args[5] = curtime
-			command.args[20] = output.."\\\\thumb"..tostring(i)..".bgra"
+			command.args[17] = output.."\\\\thumb"..tostring(i)..".bgra"
 --			mp.osd_message("Running: " .. table.concat(command.args,' '),3) --[debug]
 			
 			local process = utils.subprocess(command)
 			--Check if process was successful.
 			if process.status ~=0 then
-				mp.msg.warn("ffmpeg failed. Check if ffmpeg is in your path environment variables.")
+				mp.msg.warn("mpv subprocess failed.")
 				return
 			end
 		

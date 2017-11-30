@@ -194,7 +194,7 @@ end
  
  local function createThumbs()
 
-	local size = "scale=$thumbwidth:-1"
+	local size = "lavfi=[scale=$thumbwidth:-1]"
 	size = size:gsub("$thumbwidth", _global.thumb_width)	
 	init2 = true
 	
@@ -313,13 +313,12 @@ check = function()
 		local cmd = {}
 
 		cmd.args = {
-			"ffmpeg",
-			"-loglevel","quiet",	
-			"-i", input,
-			"-frames:v","1",
-			"-t", "0.1",
-			"-f", "md5",
-			"-"
+			"mpv",
+			"--msg-level","all=no",	
+			input,
+			"--frames","1",
+			"--of", "md5",
+			"--o=-"
 		}
 
 		local process = utils.subprocess(cmd)
