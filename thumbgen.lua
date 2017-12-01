@@ -26,6 +26,7 @@ local function generate(timespan, input, size,maxThumbs)
 		"--msg-level","all=no",
 		"--ss", "",
 		input,
+		"--hr-seek=no",
 		"--frames","1",
 		"--no-audio",
 		"--vf-add", size,
@@ -88,6 +89,7 @@ local function generateLocal(...)
 		"--msg-level","all=no",
 		"--ss", "",
 		input,
+		"--hr-seek=no",
 		"--frames","1",
 		"--no-audio",
 		"--vf-add", size,
@@ -111,7 +113,7 @@ local function generateLocal(...)
 		for i=0, maxThumbs do
 			curtime=(i*timespan)
 			command.args[5] = curtime
-			command.args[17] = output.."\\\\thumb"..tostring(i)..".bgra"
+			command.args[18] = output.."\\\\thumb"..tostring(i)..".bgra"
 --			mp.osd_message("Running: " .. table.concat(command.args,' '),3) --[debug]
 			
 			local process = utils.subprocess(command)
